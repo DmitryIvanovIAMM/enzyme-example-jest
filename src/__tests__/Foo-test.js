@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 //import TestUtils from 'react-addons-test-utils';
-import { applyMiddleware, createStore } from 'redux';
-import { Provider } from 'react-redux';
-import { combineForms } from 'react-redux-form';
+import {applyMiddleware, createStore} from 'redux';
+import {Provider} from 'react-redux';
+import {combineForms} from 'react-redux-form';
 import thunk from 'redux-thunk';
-import { TextWithError } from '../Foo.jsx';
-import { assert } from 'chai';
+import {TextWithError} from '../Foo.jsx';
+import {assert} from 'chai';
 
 function setup() {
     const initialState = {
@@ -20,7 +20,6 @@ function setup() {
         afterPostSubmitFunction: null
     };
 
-
     const store = createStore(
         combineForms({
             login: initialState
@@ -30,21 +29,21 @@ function setup() {
 
     const form = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <form>
-            <TextError
-                dispatch={store.dispatch}
-                store={initialState}
-            />
-          </form>
+            <form>
+                <TextError
+                    dispatch={store.dispatch}
+                    store={initialState}
+                />
+            </form>
         </Provider>
     );
 
     return form;
 }
 
-describe('TextError', function() {
+describe('TextError', function () {
 
-    it('should contain one input and show error for it', function() {
+    it('should contain one input and show error for it', function () {
         const form = setup();
         const input = ReactTestUtils.findRenderedDOMComponentWithTag(form, 'input');
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(form, 'input');
