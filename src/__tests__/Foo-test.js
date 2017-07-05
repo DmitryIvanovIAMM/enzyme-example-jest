@@ -5,7 +5,7 @@ import {applyMiddleware, createStore} from 'redux';
 import {Provider} from 'react-redux';
 import {combineForms} from 'react-redux-form';
 import thunk from 'redux-thunk';
-import {TextWithError} from '../Foo.jsx';
+import { TextWithError } from '../Foo.js';
 import {assert} from 'chai';
 
 function setup() {
@@ -30,7 +30,7 @@ function setup() {
     const form = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
             <form>
-                <TextError
+                <TextWithError
                     dispatch={store.dispatch}
                     store={initialState}
                 />
