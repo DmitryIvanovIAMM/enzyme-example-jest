@@ -1,21 +1,61 @@
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
+import ReactTestUtils from 'react-dom/test-utils';
+//import TestUtils from 'react-addons-test-utils';
+import { applyMiddleware, createStore } from 'redux';
+import { Provider } from 'react-redux';
+import { combineForms } from 'react-redux-form';
+import thunk from 'redux-thunk';
+import { TextWithError } from '../Foo.jsx';
+import { assert } from 'chai';
 
-jest.dontMock('../Foo');
+function setup() {
+    const initialState = {
+        message: 'test store login message',
+        login: '',
+        loginForm: 'test-login',
+        password: 'test-password',
+        id_token: '',
+        isUserLoggedIn: false,
+        modalIsOpen: true,
+        afterPostSubmitFunction: null
+    };
 
-const Foo = require('../Foo');
 
-describe("A suite", function() {
-  it("contains spec with an expectation", function() {
-    expect(true).toBe(true);
-    //expect(shallow(<Foo />).contains(<div className="foo" />)).toBe(true);
-  });
+    const store = createStore(
+        combineForms({
+            login: initialState
+        }),
+        applyMiddleware(thunk)
+    );
 
-  it("contains spec with an expectation", function() {
-    //expect(shallow(<Foo />).is('.foo')).toBe(true);
-  });
+    const form = ReactTestUtils.renderIntoDocument(
+        <Provider store={store}>
+          <form>
+            <TextError
+                dispatch={store.dispatch}
+                store={initialState}
+            />
+          </form>
+        </Provider>
+    );
 
-  it("contains spec with an expectation", function() {
-    //expect(mount(<Foo />).find('.foo').length).toBe(1);
-  });
+    return form;
+}
+
+describe('TextError', function() {
+
+    it('should contain one input and show error for it', function() {
+        const form = setup();
+        const input = ReactTestUtils.findRenderedDOMComponentWithTag(form, 'input');
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(form, 'input');
+        console.log(input);
+        assert.lengthOf(inputs, 1);
+        assert.equal(input.value, 'test-login');
+        input.value = '';
+        ReactTestUtils.Simulate.change(input);
+        const errors = ReactTestUtils.scryRenderedDOMComponentsWithTag(form, 'errors');
+        console.log(errors);
+        assert.lengthOf(errors, 1);
+    });
+
 });
